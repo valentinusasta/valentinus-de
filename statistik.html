@@ -249,7 +249,7 @@
         datasets: [
           {
             label: 'Latihan Dilakukan',
-            data: [1, 1, 1, 0],
+            data: (() => { const userId = localStorage.getItem('strive_user_id') || 'guest'; const saved = JSON.parse(localStorage.getItem('strive_chart_data_' + userId)) || [0, 0, 0, 0]; while (saved.length < 4) saved.push(0); return saved; })(),
             backgroundColor: ['#FF5757', '#FFE957', '#84FF57', '#cccccc'],
             borderRadius: 4,
             barThickness: 40,
