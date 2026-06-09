@@ -1,3 +1,16 @@
+<?php
+$conn = mysqli_connect(
+  "localhost",
+  "root",
+  "",
+  "strive_db"
+);
+
+if (!$conn) {
+  die("DB gagal");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -439,8 +452,13 @@
     }
 
     @keyframes toastProgress {
-      0% { width: 100%; }
-      100% { width: 0%; }
+      0% {
+        width: 100%;
+      }
+
+      100% {
+        width: 0%;
+      }
     }
 
     .loading-overlay {
@@ -474,8 +492,13 @@
     }
 
     @keyframes loadingSpin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
@@ -483,19 +506,30 @@
 <script>
   function pindah1() {
     document.body.classList.add("fade-out");
-    setTimeout(() => { window.location.href = "beranda.html"; }, 100);
+    setTimeout(() => {
+      window.location.href = "beranda.html";
+    }, 100);
   }
+
   function pindah2() {
     document.body.classList.add("fade-out");
-    setTimeout(() => { window.location.href = "latihan.html"; }, 100);
+    setTimeout(() => {
+      window.location.href = "latihan.html";
+    }, 100);
   }
+
   function pindah3() {
     document.body.classList.add("fade-out");
-    setTimeout(() => { window.location.href = "statistik.html"; }, 100);
+    setTimeout(() => {
+      window.location.href = "statistik.html";
+    }, 100);
   }
+
   function pindah4() {
     document.body.classList.add("fade-out");
-    setTimeout(() => { window.location.href = "jadwal.html"; }, 100);
+    setTimeout(() => {
+      window.location.href = "jadwal.html";
+    }, 100);
   }
 
   function toggleCheck(el) {
@@ -555,7 +589,9 @@
     container.appendChild(toast);
 
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => { toast.classList.add('show'); });
+      requestAnimationFrame(() => {
+        toast.classList.add('show');
+      });
     });
 
     setTimeout(() => {
@@ -575,7 +611,10 @@
       if (user && user.profile_pic) {
         document.getElementById('header-profile-pic').src = user.profile_pic;
       }
-    } catch (e) { console.error(e); hideLoading(); }
+    } catch (e) {
+      console.error(e);
+      hideLoading();
+    }
 
     // Set tanggal hari ini
     const now = new Date();
@@ -600,7 +639,29 @@
     const chartDataKey = 'strive_chart_data_' + userId;
     const lastDoneDateKey = 'strive_last_done_date_' + userId;
 
-    let chartData = JSON.parse(localStorage.getItem(chartDataKey)) || [0, 0, 0, 0];
+    const res =
+      await fetch("ambil_beranda.php");
+
+    const data =
+      await res.json();
+
+    let chartData = [
+      data.minggu_1,
+      data.minggu_2,
+      data.minggu_3,
+      data.minggu_4
+    ];
+
+    if (data.profile_pic) {
+      document.getElementById(
+        "header-profile-pic"
+      ).src = data.profile_pic;
+    }
+
+    if (data.completed == 1) {
+      btnDone.textContent = "COMPLETED";
+      btnDone.style.background = "#84FF57";
+    }
     while (chartData.length < 4) chartData.push(0);
 
     const berandaChart = new Chart(ctx, {
@@ -610,9 +671,12 @@
         datasets: [{
           label: 'Latihan Dilakukan',
           data: chartData,
-          backgroundColor: function (context) {
+          backgroundColor: function(context) {
             const chart = context.chart;
-            const { ctx, chartArea } = chart;
+            const {
+              ctx,
+              chartArea
+            } = chart;
             if (!chartArea) return '#cccccc';
             const colors = ['#FF5757', '#FFE957', '#84FF57', '#cccccc'];
             const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
@@ -628,19 +692,40 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} sesi` } }
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.parsed.y} sesi`
+            }
+          }
         },
         scales: {
           y: {
             beginAtZero: true,
             max: 7,
-            ticks: { stepSize: 1, font: { family: 'Khand', size: 14 } },
-            grid: { color: 'rgba(0,0,0,0.07)' }
+            ticks: {
+              stepSize: 1,
+              font: {
+                family: 'Khand',
+                size: 14
+              }
+            },
+            grid: {
+              color: 'rgba(0,0,0,0.07)'
+            }
           },
           x: {
-            ticks: { font: { family: 'Khand', size: 15 } },
-            grid: { display: false }
+            ticks: {
+              font: {
+                family: 'Khand',
+                size: 15
+              }
+            },
+            grid: {
+              display: false
+            }
           }
         }
       }
@@ -649,7 +734,9 @@
     document.getElementById('berandaChart').style.cursor = 'pointer';
     document.getElementById('berandaChart').addEventListener('click', () => {
       document.body.classList.add('fade-out');
-      setTimeout(() => { window.location.href = 'statistik.html'; }, 100);
+      setTimeout(() => {
+        window.location.href = 'statistik.html';
+      }, 100);
     });
 
     // Cek apakah hari ini sudah COMPLETED
@@ -690,6 +777,58 @@
       btnDone.textContent = 'COMPLETED';
       btnDone.style.background = '#84FF57';
       btnDone.style.color = '#000000';
+
+      const latihan = [];
+
+      document
+        .querySelectorAll(
+          ".latihan-item"
+        )
+        .forEach(item => {
+
+          if (
+            item
+            .querySelector(
+              ".latihan-check"
+            )
+            .classList
+            .contains(
+              "checked"
+            )
+          ) {
+
+            latihan.push(
+              item
+              .querySelector(
+                ".latihan-text"
+              )
+              .innerText
+            );
+
+          }
+
+        });
+
+      fetch(
+        "save_completed.php", {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+
+            minggu: "Minggu ke-" + weekNum,
+
+            tanggal: todayStr,
+
+            latihan: latihan
+
+          })
+
+        }
+      );
 
       showToast('Latihan hari ini selesai!', 'success');
     });
