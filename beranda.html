@@ -1,11 +1,829 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Khand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Beranda</title>
+
+  <style>
+    body {
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .fade-out {
+      animation: fadeOut 0.5s forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Khand', sans-serif;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: block;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      height: 100vh;
+    }
+
+    #background {
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #background .bg-track {
+      display: flex;
+      width: 200%;
+      height: 100%;
+      gap: 30px;
+      animation: bgScroll 180s linear infinite;
+    }
+
+    #background .bg-track img {
+      width: calc(50% - 15px);
+      height: 100%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    @keyframes bgScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .card {
+      position: relative;
+      width: 1536px;
+      height: 100px;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #000242 0%, #000499 51%, #0005D6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .profile-pic img {
+      position: relative;
+      display: flex;
+      align-items: right;
+      justify-content: right;
+      width: 85px;
+      height: 80px;
+      cursor: pointer;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .profile-pic img:hover {
+      transform: scale(1.1);
+      transition: transform 0.3s ease;
+      transform: opacity 0.8s ease;
+      opacity: 0.8;
+    }
+
+    .profile-pic button {
+      position: relative;
+      display: flex;
+      align-items: right;
+      justify-content: right;
+      width: 80px;
+      height: 80px;
+      left: 1400px;
+      bottom: 90px;
+      border-radius: 50%;
+      z-index: 3;
+      border: none;
+      background: none;
+    }
+
+    .logo img {
+      position: relative;
+      display: flex;
+      align-items: left;
+      justify-content: left;
+      width: 160px;
+      height: 160px;
+      bottom: 255px;
+      left: 20px;
+      z-index: 1;
+    }
+
+    .full {
+      width: 100%;
+    }
+
+    .btn {
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+    }
+
+    .btn button {
+      width: 264px;
+      height: 100px;
+      border-radius: 0px;
+      border: none;
+      background: linear-gradient(90deg, #01036E 0%, #0106D4 100%);
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      transform: skewX(-25deg);
+      z-index: 2;
+    }
+
+    .btn button span {
+      display: inline-block;
+      transform: skewX(25deg);
+    }
+
+    .btn button:hover {
+      transform: color ease-in-out 0.1s;
+      background: #ffffff;
+      color: #2C30E2;
+    }
+
+    .btn button:active {
+      transform: color ease-in-out 0.1s;
+      background: #ffffff;
+      color: #2C30E2;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
+
+    .jadwal-widget {
+      position: relative;
+      width: 1278px;
+      height: 610px;
+      left: 135px;
+      margin-top: -170px;
+      border-radius: 24px;
+      background: #ffffff;
+      box-shadow: inset 0px 0px 50px 3px rgba(0, 0, 0, 0.25);
+      padding: 28px 36px 28px 36px;
+      z-index: 2;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .jadwal-container {
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    .jadwal-left {
+      flex: 0 0 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 2px;
+      order: 1;
+    }
+
+    .jadwal-week {
+      font-family: "Kdam Thmor Pro", sans-serif;
+      font-weight: 500;
+      font-size: 30px;
+      color: #000000;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .jadwal-today-label {
+      font-family: "Kdam Thmor Pro", sans-serif;
+      font-weight: 500;
+      font-size: 50px;
+      color: #000000;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .jadwal-date {
+      font-family: "Kdam Thmor Pro", sans-serif;
+      font-weight: 500;
+      color: #000000;
+      letter-spacing: 1px;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .date-day {
+      font-size: 70px;
+    }
+
+    .date-month {
+      font-size: 50px;
+    }
+
+    .date-year {
+      font-size: 50px;
+    }
+
+    .jadwal-chart-wrap {
+      flex: 1;
+      position: relative;
+      margin-top: 8px;
+    }
+
+    .jadwal-edit {
+      position: absolute;
+      top: 30px;
+      right: 920px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 19px;
+      color: #555;
+      cursor: pointer;
+      letter-spacing: 1px;
+      font-weight: 400;
+      background: none;
+      border: none;
+      transition: color 0.2s;
+    }
+
+    .jadwal-edit:hover {
+      color: #2C30E2;
+    }
+
+    .jadwal-right-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      order: 2;
+    }
+
+    .jadwal-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+      border-radius: 14px;
+      padding: 6px 0;
+      background: #EEEEEE;
+    }
+
+    .btn-done {
+      position: relative;
+      margin-top: 12px;
+      background: #CCCCCC;
+      color: #666666;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 20px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 2px;
+    }
+
+    .jadwal-right::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .jadwal-right::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .jadwal-right::-webkit-scrollbar-thumb {
+      background: rgba(100, 120, 255, 0.3);
+      border-radius: 4px;
+    }
+
+    .latihan-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      border-bottom: 1px solid rgba(160, 165, 210, 0.3);
+      gap: 8px;
+      flex: 1;
+      min-height: 55px;
+    }
+
+    .latihan-item:last-child {
+      border-bottom: none;
+    }
+
+    .latihan-text {
+      font-family: 'Khand', sans-serif;
+      font-size: 25px;
+      color: #000000;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+
+    .latihan-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      border: 1.5px solid rgba(150, 160, 220, 0.6);
+      background: rgba(220, 225, 255, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .latihan-check.checked {
+      background: rgba(0, 200, 80, 0.2);
+      border-color: #00c850;
+    }
+
+    .latihan-check svg {
+      width: 13px;
+      height: 13px;
+      stroke: #2C30E2;
+      display: none;
+    }
+
+    .latihan-check.checked svg {
+      stroke: #00c850;
+      display: block;
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 9999;
+    }
+
+    .toast-item {
+      position: relative;
+      background: #FFFFFF;
+      box-shadow: inset 0px 0px 15px 3px rgba(0, 0, 0, 0.25);
+      border: 2px solid;
+      min-width: 280px;
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-family: 'Khand', sans-serif;
+      font-size: 18px;
+      overflow: hidden;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+    }
+
+    .toast-item.show {
+      transform: translateX(0);
+    }
+
+    .toast-item.hide {
+      transform: translateX(120%);
+      opacity: 0;
+    }
+
+    .toast-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 4px;
+      width: 100%;
+      background: #cc0000;
+      transform-origin: left;
+      animation: toastProgress 3s linear forwards;
+    }
+
+    @keyframes toastProgress {
+      0% { width: 100%; }
+      100% { width: 0%; }
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #e0e0e0;
+      border-top: 6px solid #2C30E2;
+      border-radius: 50%;
+      animation: loadingSpin 0.8s linear infinite;
+    }
+
+    @keyframes loadingSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
+
+<script>
+  function pindah1() {
+    document.body.classList.add("fade-out");
+    setTimeout(() => { window.location.href = "beranda.html"; }, 100);
+  }
+  function pindah2() {
+    document.body.classList.add("fade-out");
+    setTimeout(() => { window.location.href = "latihan.html"; }, 100);
+  }
+  function pindah3() {
+    document.body.classList.add("fade-out");
+    setTimeout(() => { window.location.href = "statistik.html"; }, 100);
+  }
+  function pindah4() {
+    document.body.classList.add("fade-out");
+    setTimeout(() => { window.location.href = "jadwal.html"; }, 100);
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    updateDoneButtonStatic();
+  }
+
+  function updateDoneButtonStatic() {
+    const btnDone = document.getElementById('btn-done-harian');
+    if (!btnDone) return;
+    const allChecks = document.querySelectorAll('.latihan-check');
+    const allChecked = [...allChecks].every(c => c.classList.contains('checked'));
+
+    if (allChecked) {
+      btnDone.style.background = '#2C30E2';
+      btnDone.style.color = '#FFFFFF';
+    } else {
+      btnDone.style.background = '#CCCCCC';
+      btnDone.style.color = '#666666';
+    }
+  }
+
+  function showLoading() {
+    let overlay = document.getElementById('loading-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'loading-overlay';
+      overlay.className = 'loading-overlay';
+      overlay.innerHTML = '<div class="loading-spinner"></div>';
+      document.body.appendChild(overlay);
+    }
+    overlay.classList.add('active');
+  }
+
+  function hideLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.classList.remove('active');
+  }
+
+  function showToast(message, type = 'error') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toast-container';
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-item';
+    const origColor = type === 'success' ? '#00f024' : '#cc0000';
+    toast.innerHTML = `
+      <div style="position: relative; z-index: 1; color: ${origColor};">${message}</div>
+      <div class="toast-progress" style="background: ${origColor};"></div>
+    `;
+    toast.style.borderColor = origColor;
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { toast.classList.add('show'); });
+    });
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      toast.classList.add('hide');
+      setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 400);
+    }, 3000);
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    showLoading();
+    try {
+      const user = await window.striveAPI.getCurrentUser();
+      hideLoading();
+      if (user && user.profile_pic) {
+        document.getElementById('header-profile-pic').src = user.profile_pic;
+      }
+    } catch (e) { console.error(e); hideLoading(); }
+
+    // Set tanggal hari ini
+    const now = new Date();
+    const daysofweek = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+    const dayofweek = daysofweek[now.getDay()];
+
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+    const weekNum = Math.ceil((day + firstDay) / 7);
+
+    document.getElementById('jadwal-week').textContent = 'Minggu ke-' + weekNum;
+    document.getElementById('jadwal-date').innerHTML =
+      '<span class="date-day">' + day + '</span> <span class="date-month">,  ' + month + '</span> <span class="date-year">' + year + '</span>';
+    document.getElementById('jadwal-today-label').textContent = dayofweek;
+
+    // Chart.js
+    const ctx = document.getElementById('berandaChart').getContext('2d');
+    const userId = localStorage.getItem('strive_user_id') || 'guest';
+    const chartDataKey = 'strive_chart_data_' + userId;
+    const lastDoneDateKey = 'strive_last_done_date_' + userId;
+
+    let chartData = JSON.parse(localStorage.getItem(chartDataKey)) || [0, 0, 0, 0];
+    while (chartData.length < 4) chartData.push(0);
+
+    const berandaChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+        datasets: [{
+          label: 'Latihan Dilakukan',
+          data: chartData,
+          backgroundColor: function (context) {
+            const chart = context.chart;
+            const { ctx, chartArea } = chart;
+            if (!chartArea) return '#cccccc';
+            const colors = ['#FF5757', '#FFE957', '#84FF57', '#cccccc'];
+            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+            gradient.addColorStop(0, colors[context.dataIndex]);
+            gradient.addColorStop(1, '#ffffff');
+            return gradient;
+          },
+          borderRadius: 4,
+          barThickness: 40,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} sesi` } }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 7,
+            ticks: { stepSize: 1, font: { family: 'Khand', size: 14 } },
+            grid: { color: 'rgba(0,0,0,0.07)' }
+          },
+          x: {
+            ticks: { font: { family: 'Khand', size: 15 } },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+
+    document.getElementById('berandaChart').style.cursor = 'pointer';
+    document.getElementById('berandaChart').addEventListener('click', () => {
+      document.body.classList.add('fade-out');
+      setTimeout(() => { window.location.href = 'statistik.html'; }, 100);
+    });
+
+    // Cek apakah hari ini sudah COMPLETED
+    const todayStr = now.toDateString();
+    const btnDone = document.getElementById('btn-done-harian');
+
+    if (localStorage.getItem(lastDoneDateKey) === todayStr) {
+      btnDone.textContent = 'COMPLETED';
+      btnDone.style.background = '#84FF57';
+      btnDone.style.color = '#000000';
+    } else {
+      updateDoneButtonStatic();
+    }
+
+    // Tombol Complete
+    btnDone.addEventListener('click', () => {
+      if (localStorage.getItem(lastDoneDateKey) === todayStr) {
+        showToast('Aktivitas hari ini sudah selesai!', 'error');
+        return;
+      }
+
+      const allChecks = document.querySelectorAll('.latihan-check');
+      const allChecked = [...allChecks].every(c => c.classList.contains('checked'));
+
+      if (!allChecked) {
+        showToast('Selesaikan semua aktivitas terlebih dahulu!', 'error');
+        return;
+      }
+
+      const targetIndex = Math.min(Math.max(weekNum - 1, 0), 3);
+      chartData[targetIndex] += 1;
+      localStorage.setItem(chartDataKey, JSON.stringify(chartData));
+      localStorage.setItem(lastDoneDateKey, todayStr);
+
+      berandaChart.data.datasets[0].data = chartData;
+      berandaChart.update();
+
+      btnDone.textContent = 'COMPLETED';
+      btnDone.style.background = '#84FF57';
+      btnDone.style.color = '#000000';
+
+      showToast('Latihan hari ini selesai!', 'success');
+    });
+  });
+</script>
+
 <body>
-    
+  <div class="card">
+    <div class="header"></div>
+    <div class="btn">
+      <button onclick="pindah1()"><span>BERANDA</span></button>
+      <button onclick="pindah2()"><span>LATIHAN</span></button>
+      <button onclick="pindah3()"><span>STATISTIK</span></button>
+      <button onclick="pindah4()"><span>JADWAL</span></button>
+    </div>
+  </div>
+  <div class="profile-pic">
+    <button onclick="window.location.href='profile.html'">
+      <img id="header-profile-pic" src="Profile.png" alt="Profile Picture">
+    </button>
+  </div>
+  <div class="logo">
+    <img src="Strive.png">
+  </div>
+
+  <div id="background">
+    <div class="bg-track">
+      <img src="BackgroundStrive.png" alt="Background Image">
+      <img src="BackgroundStrive.png" alt="Background Image">
+    </div>
+  </div>
+
+  <!-- ===== JADWAL WIDGET ===== -->
+  <div class="jadwal-widget">
+    <button class="jadwal-edit" onclick="pindah4()">EDIT →</button>
+
+    <div class="jadwal-container">
+
+      <!-- Kiri: info tanggal + chart -->
+      <div class="jadwal-left">
+        <div class="jadwal-week" id="jadwal-week">Minggu ke-3</div>
+        <div class="jadwal-today-label" id="jadwal-today-label">Today</div>
+        <div class="jadwal-date" id="jadwal-date">
+          <span class="date-day">21</span>
+          <span class="date-month">, April</span>
+          <span class="date-year">2026</span>
+        </div>
+        <div class="jadwal-chart-wrap">
+          <canvas id="berandaChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Kanan: daftar latihan -->
+      <div class="jadwal-right-wrap">
+        <div class="jadwal-right">
+          <div class="latihan-item">
+            <span class="latihan-text">· 2 x Push Up</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div class="latihan-item">
+            <span class="latihan-text">· 2 x Sit Up</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div class="latihan-item">
+            <span class="latihan-text">· 3 x Pull Up</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div class="latihan-item">
+            <span class="latihan-text">· 3 x Squat</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div class="latihan-item">
+            <span class="latihan-text">· 6 x Jumping Jack</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div class="latihan-item">
+            <span class="latihan-text">· 7 x Mountain Climber</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div class="latihan-item">
+            <span class="latihan-text">· 4 x Mengangkat Barbel (40 KG)</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div class="latihan-item">
+            <span class="latihan-text">· 15 x Lompat Tali</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <div class="latihan-item">
+            <span class="latihan-text">· 16 x Back Up</span>
+            <div class="latihan-check" onclick="toggleCheck(this)">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="2,6 5,9 10,3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <button class="btn-done" id="btn-done-harian">Complete</button>
+      </div>
+
+    </div>
+  </div>
+
 </body>
+
 </html>
